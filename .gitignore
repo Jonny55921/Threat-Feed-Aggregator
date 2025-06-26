@@ -1,0 +1,6 @@
+# Ignore logs and secrets
+
+logs/
+config/otx_api_key.txt
+__pycache__/
+.env
