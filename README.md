@@ -4,11 +4,17 @@ A Python-based tool that fetches threat intelligence data from AlienVault OTX an
 
 ## 📦 Features
 
-- 📡 Pulls live threat pulses from [AlienVault OTX](https://otx.alienvault.com/)
-- 🧾 Logs threat pulse summaries with timestamps
-- 🛰️ Extracts and logs detailed IOCs in full mode
-- 📁 Saves full IOC logs to `logs/threat_feed.log`
-- 🧬 Exports structured indicators as `logs/iocs.json` (when not in summary mode)
+### Tier 1: Threat Pulse Aggregation
+- 📡 Pulls live pulses from [AlienVault OTX](https://otx.alienvault.com/)
+- 🧾 Logs summary data or full IOCs to `logs/threat_feed.log`
+- 🔄 Toggle `SUMMARY_MODE` in `threat_aggregator.py`
+- 📁 Full IOC export to `logs/iocs.json` (structured format)
+
+### Tier 2: Firewall Simulation
+- 🔍 Loads IOCs from `iocs.json`
+- 🔐 Filters for unique IPv4 indicators
+- 🧪 Simulates blocking IPs using `iptables` (dry-run mode)
+- 📄 Logs blocking actions to `logs/blocked_ips.log`
 
 ## 📁 Project Structure
 
@@ -22,7 +28,12 @@ Threat-Feed-Aggregator/
 
 │ └── iocs.json # Full IOC export (in full mode)
 
+│ └── blockedf_ips.log # Log of blocked IPs
+
 ├── .gitignore
+
+
+├── firewall_blocker.py
 
 └── README.md
 
@@ -35,12 +46,14 @@ Inside `threat_aggregator.py`:
 
 ```python
 SUMMARY_MODE = True  # Change to False to enable full IOC logging and JSON export
+DRY_RUN = True  # Set to False to actually execute iptables blocking
 ```
 1. Add your OTX API key to `config/otx_api_key.txt`
 2. Run:
 
 ```bash
 python3 threat_aggregator.py
+python3 firewall_blocker.py
 ```
 In full mode, you’ll see:
 ```python
