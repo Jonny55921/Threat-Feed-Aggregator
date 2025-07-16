@@ -16,7 +16,7 @@ SUMMARY_MODE = False  # Change to False for full IOC logging
 JSON_PATH = "logs/iocs.json" # Path to save IOCs in JSON format
 
 def get_api_key():
-    """Retrieve the OTX API key from a file."""
+    # Retrieve the OTX API key from a file.
     try:
         with open(API_PATH, 'r') as file:
             return file.read().strip()
@@ -27,15 +27,19 @@ def get_api_key():
 def log_threat(message):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     log_entry = f"{timestamp} - {message}"
-    
-    print(f"[DEBUG] Writing log: {log_entry}")
+    # Logs are written in year/month/day format and hour/minute/second format
+
+    #print(f"[DEBUG] Writing log: {log_entry}")
+    # Uncomment above line for debugging purposes
 
     try:
         with open(LOG_PATH, 'a') as log_file:
             log_file.write(log_entry + "\n")
-        print(f"[DEBUG] Successfully wrote to {LOG_PATH}")
+        #print(f"[DEBUG] Successfully wrote to {LOG_PATH}")
+        # Uncomment above line for debugging purposes
     except Exception as e:
         print(f"[ERROR] Failed to write to log file: {e}")
+        
 
 
 def fetch_threat_data(api_key):
@@ -54,7 +58,16 @@ def fetch_threat_data(api_key):
     seen_indicators = set()
     all_iocs = []  # Store all extracted IOCs here
 
-    for pulse in pulses[:5]:  # Change later to all
+    """
+    
+    IMPORTANT: The following loop processes 5 threat pulses.
+    If you want to process all pulses, remove the slicing [:5].
+    This is done to limit the output in summary mode.
+    If you want to see all IOCs, set SUMMARY_MODE to False.
+    If you want to see only the summary, set SUMMARY_MODE to True.
+
+    """
+    for pulse in pulses[:5]:
         pulse_name = pulse.get('name', 'Unknown Pulse')
         indicators = pulse.get('indicators', [])
         log_threat(f"Pulse: {pulse_name} - Indicators: {len(indicators)}")
@@ -81,7 +94,8 @@ def fetch_threat_data(api_key):
     if not SUMMARY_MODE and all_iocs:
         with open(JSON_PATH, 'w') as json_file:
             json.dump(all_iocs, json_file, indent=4)
-        print(f"[DEBUG] IOC data saved to {JSON_PATH}")
+        #print(f"[DEBUG] IOC data saved to {JSON_PATH}")
+        # Uncomment above line for debugging purposes
 
 
 

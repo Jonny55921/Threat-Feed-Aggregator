@@ -17,7 +17,10 @@ def is_valid_ip(ip):
 def log_block(msg):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     entry = f"{timestamp} - {msg}"
-    print(f"[DEBUG] Writing block log: {entry}")
+    # Logs are written in year/month/day format and hour/minute/second format
+
+    #print(f"[DEBUG] Writing block log: {entry}")
+    # Uncomment above line for debugging purposes
 
     with open(BLOCK_LOG, 'a') as f:
         f.write(entry + "\n")
@@ -40,7 +43,8 @@ def simulate_firewall_block(ip):
 def process_iocs(iocs):
     seen_ips = set()
     for ioc in iocs:
-        print(f"[DEBUG] Type: {ioc.get('type')} | Indicator: {ioc.get('indicator')}")
+        #print(f"[DEBUG] Type: {ioc.get('type')} | Indicator: {ioc.get('indicator')}")
+        # Uncomment above line for debugging purposes
         if ioc.get("type", "").strip().lower() == "ipv4":
             ip = ioc.get("indicator")
             if ip and ip not in seen_ips and is_valid_ip(ip):
